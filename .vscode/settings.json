@@ -1,0 +1,8 @@
+{
+	"search.exclude": {
+		"Pods": true,
+		"*.xcodeproj": true,
+		"docs": true,
+		"resources/l10n": true,
+	}
+}
