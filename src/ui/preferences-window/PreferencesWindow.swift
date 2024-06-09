@@ -46,7 +46,7 @@ class PreferencesWindow: NSWindow {
             (3, NSLocalizedString("Policies", comment: ""), "policies", "antenna.radiowaves.left.and.right", PoliciesTab.initTab()),
             (4, NSLocalizedString("Blacklists", comment: ""), "blacklists", "hand.raised", BlacklistsTab.initTab()),
             (5, NSLocalizedString("About", comment: ""), "about", "info.circle", AboutTab.initTab()),
-            (6, NSLocalizedString("Acknowledgments", comment: ""), "acknowledgments", "hand.thumbsup", AcknowledgmentsTab.initTab()),
+            // (6, NSLocalizedString("Acknowledgments", comment: ""), "acknowledgments", "hand.thumbsup", AcknowledgmentsTab.initTab()),
         ].forEach { makeToolbarItem($0.0, $0.1, $0.2, $0.3, $0.4) }
         largestTabWidth = Array(toolbarItems.values).reduce(CGFloat(0)) { max($0, $1.2.subviews[0].fittingSize.width) }
         Array(toolbarItems.values).forEach {
