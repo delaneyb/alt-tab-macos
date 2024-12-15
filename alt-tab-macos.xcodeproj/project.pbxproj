@@ -3376,6 +3376,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D04BA62D5EACAAAD7BCD3E79 /* release.xcconfig */;
 			buildSettings = {
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
 			};
 			name = Release;
 		};
@@ -3383,6 +3384,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D04BA1232AFEEFE90D5CC827 /* debug.xcconfig */;
 			buildSettings = {
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
 			};
 			name = Debug;
 		};
