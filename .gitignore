@@ -12,3 +12,14 @@ codesign.conf
 codesign.crt
 codesign.key
 codesign.p12
+/notes-and-archive/
+# Swift Package Manager build artifacts
+/.build/
+/.swiftpm/
+/alt-tab-macos.xcworkspace/xcshareddata/swiftpm/
+
+# Ignore workspace copy of the dependency lockfile (keep the root one if desired)
+/alt-tab-macos.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+# Personal scratch files
+/TODOs.md
