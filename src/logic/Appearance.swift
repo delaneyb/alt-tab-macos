@@ -73,29 +73,30 @@ class Appearance {
             lightTheme()
         }
     }
+    /// These three functions - thumbnailsSize(), appIconsSize(), and titlesSize() - are responsible
+    /// for configuring the visual appearance settings based on the selected display mode of the app
+    /// switcher.
 
     private static func thumbnailsSize(_ isHorizontalScreen: Bool) {
         hideThumbnails = false
-        windowPadding = 18
-        cellCornerRadius = 10
-        windowCornerRadius = 23
+        windowPadding = 10
+        cellCornerRadius = 0
+        windowCornerRadius = 0
+        intraCellPadding = 5
+        // IMPORTANT: no gaps between adjacent cells otherwise we get a small flicker as the mouse
+        // moves and hovers from one thumbnail to the next where momentarily we show no app preview
+        // rather than cleanly switching between showing one and the next
+        interCellPadding = 0
         edgeInsetsSize = 12
-        switch currentSize {
-            case .small:
-                rowsCount = isHorizontalScreen ? 5 : 8
-                iconSize = 20
-                fontHeight = 12
-            case .medium:
-                rowsCount = isHorizontalScreen ? 4 : 7
-                iconSize = 30
-                fontHeight = 13
-            case .large:
-                rowsCount = isHorizontalScreen ? 3 : 6
-                iconSize = 32
-                fontHeight = 16
-        }
-        let thumbnailsPanelRatio = (NSScreen.preferred.frame.width * maxWidthOnScreen) / (NSScreen.preferred.frame.height * maxHeightOnScreen)
-        (windowMinWidthInRow, windowMaxWidthInRow) = AppearanceTestable.goodValuesForThumbnailsWidthMinMax(thumbnailsPanelRatio, rowsCount)
+        // They totally bombed the preferences and configurability of this in one of the 2024
+        // updates taking away all of the sliders where you used to be able to set these settings
+        // directly and instead replacing them with a small medium large setting
+        rowsCount = isHorizontalScreen ? 4 : 5
+        iconSize = 22
+        fontHeight = 14
+        maxWidthOnScreen = 0.6
+        windowMinWidthInRow = 0.15
+        windowMaxWidthInRow = 0.30
         if currentVisibility == .highest {
             edgeInsetsSize = 10
             cellCornerRadius = 12
