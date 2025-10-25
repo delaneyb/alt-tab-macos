@@ -82,13 +82,20 @@ extension NSScreen {
         return nil
     }
 
-    func repositionPanel(_ window: NSWindow) {
+    func repositionPanel(_ window: NSWindow, _ alignment: VerticalAlignment = .bottom) {
         let screenFrame = visibleFrame
         let panelFrame = window.frame
         let x = screenFrame.minX + max(screenFrame.width - panelFrame.width, 0) * 0.5
-        let y = screenFrame.minY + max(screenFrame.height - panelFrame.height, 0) * 0.5
+        let y = screenFrame.minY + max(screenFrame.height - panelFrame.height, 0) * alignment.rawValue
         window.setFrameOrigin(NSPoint(x: x, y: y))
     }
+}
+
+enum VerticalAlignment: CGFloat {
+    case centered = 0.5
+    // vertically centered but with an upward offset, similar to a book title; mimics NSView.center()
+    case appleCentered = 0.75
+    case bottom = 0.0
 }
 
 typealias ScreenUuid = CFString
