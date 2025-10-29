@@ -7,6 +7,7 @@ They helped [develop the app](https://github.com/lwouis/alt-tab-macos/graphs/con
 * [akx](https://github.com/akx)
 * [Allsochen](https://github.com/Allsochen)
 * [ayroblu](https://github.com/ayroblu)
+* [britalmeida](https://github.com/britalmeida)
 * [Calinou](https://github.com/Calinou)
 * [damonpam](https://github.com/damonpam)
 * [decodism](https://github.com/decodism)
@@ -25,16 +26,16 @@ They helped [develop the app](https://github.com/lwouis/alt-tab-macos/graphs/con
 * [phungtuanhoang1996](https://github.com/phungtuanhoang1996)
 * [rbnis](https://github.com/rbnis)
 * [Rjevski](https://github.com/Rjevski)
-* [samdenty](https://github.com/samdenty)
-* [SaswatB](https://github.com/SaswatB)
 * [ShlomoCode](https://github.com/ShlomoCode)
 * [skolj](https://github.com/skolj)
+* [stopdesign](https://github.com/stopdesign)
 * [xanathar](https://github.com/xanathar)
 * [zacharee](https://github.com/zacharee)
 
 They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 
 * 73
+* A
 * Aamirsuleman
 * Aarni Koskela
 * Abdulelah
@@ -57,6 +58,7 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Ameng
 * Anders
 * Andreas Wagner
+* Andrej Koman
 * Andrew Vader
 * antoon334
 * Anurag Roy
@@ -68,26 +70,33 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * blanorama
 * bluefirex
 * bovirus
+* Bufo
 * BV Joshi
 * caduellery
 * Caner İlhan
 * catcore
+* changanmoon
 * Christian Keilmann
 * Chun Fei Lung
 * codecantata
+* codingalone
 * Cong Tri
 * Dan
 * Dan84
 * Darius Rosendahl
 * Darko
 * David R
+* Denis
 * Dékány Martin
+* dibas-np
 * Didier Deschrijver
 * Dzhuneyt
-* EDUARDO
 * edu_sombra
+* EDUARDO
 * Eimantas
 * Eliezer Shpigelman
+* Emir H. KAYNAK
+* EP45
 * Eric WANTZ
 * Ersagun Kuruca
 * EUKA
@@ -118,7 +127,9 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Ialiendeg
 * Ida Bomholt Dyrholm Jacobsen
 * Igor Aradski
+* igorpocta
 * Indexerrowaty
+* Inês Almeida
 * isametry
 * Ismatulla
 * Isthereanybody
@@ -149,16 +160,19 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Kristófer Fannar Björnsson
 * Kushnee5
 * Kuuchi
-* L
 * Lakshman Kolappan
+* Lars
 * Lasse Mattila
 * Lcwhhh
+* Leo
 * Lester
-* Loïc 
+* Logan Boissy
 * Loic. peron
+* Loïc 
 * LostInCompilation
 * Lumaxis
 * lwouis
+* M
 * Malo
 * Maplevantablack
 * Marc Pla
@@ -178,7 +192,10 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Michael
 * Milos M
 * Mohammad Al Zouabi
+* mohma
+* Mohsin Rahman
 * Mr. axel. bock
+* mrtbts
 * MuDraconis
 * Muzhenstudent
 * Mwolfinspace
@@ -194,12 +211,14 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Paul Pichaureau
 * Paul Przybyszewski
 * Paul. pichaureau
-* Paulius
 * Pehovorka
+* Petar Shomov
 * Peterkim0620
 * Petr Kolář
+* Petter Johan Olsen
 * Piotr Budny
 * Quentin. douarre
+* Rajesh Kaswala
 * Rami Elsawy
 * Raphaël
 * Rasmus
@@ -212,11 +231,16 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Roccobot
 * Rodrigo Schneider
 * Ron Nuss
+* rPaasch
+* Ryan Nardi
 * sa-ha
+* Sai Khant Zay Lynn Yaung
+* Saransh
 * sawtooth
 * Sebastian
 * Selcuk Dursun
 * Sergey
+* Serhii Alekseev
 * Seyedparsa Mirtaheri
 * Shameem Reza
 * SheNeVmerla
@@ -226,9 +250,11 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Sjur Moshagen
 * Sjur.n. moshagen
 * Stan Smits
+* star-affinity
 * Stefan
 * Stefan Lange
 * Svetoslav Stefanov
+* Thebennue
 * Thomas Wölk
 * Thorsten
 * Thorsten
@@ -245,7 +271,6 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Wesley Matos
 * Whatsmine-HaoshuaiXu
 * Wilhelm Wolfgang Gärtner
-* wtwt0119!!
 * Yongsung Yoon
 * Yorben
 * Yossi Zahn
@@ -253,9 +278,11 @@ They helped [localize the app](https://poeditor.com/join/project/8AOEZ0eAZE):
 * Yukai
 * yumechan
 * Yusuf Caliskan
+* Zamaialexander
 * Zuhaib Syed
+* Τσιλιμπότης Δημ.
+* Андрій Кирбаба
+* Ивайло
+* Пустой
 * 林清
 * 橙梓
-* Ивайло
-* Андрій Кирбаба
-* Τσιλιμπότης Δημ.

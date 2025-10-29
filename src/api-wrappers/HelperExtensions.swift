@@ -312,3 +312,23 @@ extension Optional {
         if let self { return self } else { throw Error.unexpectedNil }
     }
 }
+
+extension DispatchTimeInterval {
+    var toMilliseconds: Int {
+        switch self {
+            case .seconds(let s): return s / 1000
+            case .milliseconds(let ms): return ms
+            case .microseconds(let us): return us * 1000
+            case .nanoseconds(let ns): return ns * 1_000_000
+            default: return .max
+        }
+    }
+}
+
+extension NSRunningApplication {
+    var id: String { "pid:\(String(describing: processIdentifier)) app:\(bundleIdentifier ?? bundleURL?.absoluteString ?? executableURL?.absoluteString ?? localizedName ?? "nil")"  }
+}
+
+// 250ms is similar to human delay in processing changes on screen
+// See https://humanbenchmark.com/tests/reactiontime
+let humanPerceptionDelay = DispatchTimeInterval.milliseconds(250)

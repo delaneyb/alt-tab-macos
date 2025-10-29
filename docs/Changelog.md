@@ -1,5 +1,125 @@
 # Release notes
 
+# [7.30.0](https://github.com/lwouis/alt-tab-macos/compare/v7.29.0...v7.30.0) (2025-09-23)
+
+
+### Bug Fixes
+
+* bring back pre-v7.28 performance (closes [#4805](https://github.com/lwouis/alt-tab-macos/issues/4805)) ([fb6110d](https://github.com/lwouis/alt-tab-macos/commit/fb6110d))
+
+
+### Features
+
+* improve nb/nl/zh-tw localizations ([a9cb03c](https://github.com/lwouis/alt-tab-macos/commit/a9cb03c))
+
+# [7.29.0](https://github.com/lwouis/alt-tab-macos/compare/v7.28.0...v7.29.0) (2025-09-20)
+
+
+### Bug Fixes
+
+* windows order was not updating correctly (closes [#4754](https://github.com/lwouis/alt-tab-macos/issues/4754)) ([1316eb2](https://github.com/lwouis/alt-tab-macos/commit/1316eb2))
+
+
+### Features
+
+* improve fr/ja languages ([c5286c3](https://github.com/lwouis/alt-tab-macos/commit/c5286c3))
+
+# [7.28.0](https://github.com/lwouis/alt-tab-macos/compare/v7.27.0...v7.28.0) (2025-09-15)
+
+
+### Bug Fixes
+
+* focusing windows could fail after focusing a frozen app ([#4520](https://github.com/lwouis/alt-tab-macos/issues/4520)) ([591ce52](https://github.com/lwouis/alt-tab-macos/commit/591ce52))
+* improve detection of windows (closes [#4405](https://github.com/lwouis/alt-tab-macos/issues/4405)) ([3c79840](https://github.com/lwouis/alt-tab-macos/commit/3c79840))
+* keyboard selection now works with dragging + mouse hover ([be077f1](https://github.com/lwouis/alt-tab-macos/commit/be077f1)), closes [#4711](https://github.com/lwouis/alt-tab-macos/issues/4711)
+* remove high-volume unactionable logs (closes [#4697](https://github.com/lwouis/alt-tab-macos/issues/4697)) ([e93e42f](https://github.com/lwouis/alt-tab-macos/commit/e93e42f))
+
+
+### Features
+
+* add gujarati localization ([4ebd990](https://github.com/lwouis/alt-tab-macos/commit/4ebd990))
+* add hong-kong cantonese + improve other languages ([78c8525](https://github.com/lwouis/alt-tab-macos/commit/78c8525))
+* add preference to show only non-active apps (closes [#4691](https://github.com/lwouis/alt-tab-macos/issues/4691)) ([4567550](https://github.com/lwouis/alt-tab-macos/commit/4567550))
+* improve norwegian localization ([726e13e](https://github.com/lwouis/alt-tab-macos/commit/726e13e))
+* more fine-grained cursor-follows-focus preference (closes [#4734](https://github.com/lwouis/alt-tab-macos/issues/4734)) ([985a681](https://github.com/lwouis/alt-tab-macos/commit/985a681))
+
+# [7.27.0](https://github.com/lwouis/alt-tab-macos/compare/v7.26.0...v7.27.0) (2025-08-12)
+
+
+### Bug Fixes
+
+* restore default command+tab if shortcut is unbound (closes [#4642](https://github.com/lwouis/alt-tab-macos/issues/4642)) ([f66c92a](https://github.com/lwouis/alt-tab-macos/commit/f66c92a))
+
+
+### Features
+
+* improve cs/th localizations ([aa46a62](https://github.com/lwouis/alt-tab-macos/commit/aa46a62))
+* windowless apps can now be shown in focus-order (closes [#4653](https://github.com/lwouis/alt-tab-macos/issues/4653)) ([5db53b5](https://github.com/lwouis/alt-tab-macos/commit/5db53b5))
+
+# [7.26.0](https://github.com/lwouis/alt-tab-macos/compare/v7.25.0...v7.26.0) (2025-07-31)
+
+
+### Bug Fixes
+
+* ignore autodesk fusion internal panels (closes [#4578](https://github.com/lwouis/alt-tab-macos/issues/4578)) ([f67d182](https://github.com/lwouis/alt-tab-macos/commit/f67d182))
+
+
+### Features
+
+* improve da/fi/ga localizations ([f376529](https://github.com/lwouis/alt-tab-macos/commit/f376529))
+* improve preference to show-apps-with-open-window (closes [#4485](https://github.com/lwouis/alt-tab-macos/issues/4485)) ([67f5098](https://github.com/lwouis/alt-tab-macos/commit/67f5098))
+
+# [7.25.0](https://github.com/lwouis/alt-tab-macos/compare/v7.24.0...v7.25.0) (2025-06-14)
+
+
+### Bug Fixes
+
+* icons on thumbnails could sometimes be incorrect ([b4bc0b0](https://github.com/lwouis/alt-tab-macos/commit/b4bc0b0))
+
+
+### Features
+
+* new cli commands: --show, --detailed-list (closes [#4489](https://github.com/lwouis/alt-tab-macos/issues/4489)) ([b0ce899](https://github.com/lwouis/alt-tab-macos/commit/b0ce899))
+
+# [7.24.0](https://github.com/lwouis/alt-tab-macos/compare/v7.23.0...v7.24.0) (2025-05-05)
+
+
+### Features
+
+* clicking to focus windows/apps is now easier (closes [#4407](https://github.com/lwouis/alt-tab-macos/issues/4407)) ([397457c](https://github.com/lwouis/alt-tab-macos/commit/397457c))
+* improve ca/pt/ro localizations ([8b7d69c](https://github.com/lwouis/alt-tab-macos/commit/8b7d69c))
+
+
+### Performance Improvements
+
+* avoid updating preview if not necessary ([518f8b4](https://github.com/lwouis/alt-tab-macos/commit/518f8b4))
+
+# [7.23.0](https://github.com/lwouis/alt-tab-macos/compare/v7.22.0...v7.23.0) (2025-04-01)
+
+
+### Bug Fixes
+
+* avoid crashing on uncommon keys in shortcuts (closes [#4379](https://github.com/lwouis/alt-tab-macos/issues/4379)) ([9d852ee](https://github.com/lwouis/alt-tab-macos/commit/9d852ee))
+* window name would sometimes be empty (closes [#4350](https://github.com/lwouis/alt-tab-macos/issues/4350)) ([911c3c1](https://github.com/lwouis/alt-tab-macos/commit/911c3c1))
+
+
+### Features
+
+* improve hindi localization ([dec0519](https://github.com/lwouis/alt-tab-macos/commit/dec0519))
+
+# [7.22.0](https://github.com/lwouis/alt-tab-macos/compare/v7.21.1...v7.22.0) (2025-03-30)
+
+
+### Bug Fixes
+
+* language switcher picked up as window ([f4f7d9a](https://github.com/lwouis/alt-tab-macos/commit/f4f7d9a))
+* prevent rare crash ([4e35f9f](https://github.com/lwouis/alt-tab-macos/commit/4e35f9f))
+
+
+### Features
+
+* update ca/de/fr/ko/ru/tw localizations ([9b3f936](https://github.com/lwouis/alt-tab-macos/commit/9b3f936))
+
 ## [7.21.1](https://github.com/lwouis/alt-tab-macos/compare/v7.21.0...v7.21.1) (2025-02-22)
 
 

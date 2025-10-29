@@ -37,23 +37,36 @@ class ThumbnailView: FlippedView {
     var windowControlIcons: [TrafficLightButton] { [quitIcon, closeIcon, minimizeIcon, maximizeIcon] }
     var windowIndicatorIcons: [ThumbnailFontIconView] { [hiddenIcon, fullscreenIcon, minimizedIcon, spaceIcon] }
 
+    var receivedMouseDown = false
+
     // for VoiceOver cursor
     override var canBecomeKeyView: Bool { true }
     override var acceptsFirstResponder: Bool { true }
 
     override func isAccessibilityElement() -> Bool { true }
 
+    override func wantsPeriodicDraggingUpdates() -> Bool { false }
+
     override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
         mouseMovedCallback()
+        setDraggingTimer()
         return .link
     }
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        setDraggingTimer()
+        return .link
+    }
+
+    private func setDraggingTimer() {
+        dragAndDropTimer?.invalidate()
         dragAndDropTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { _ in
-            self.mouseUpCallback()
+            // the user can tab to focus the next thumbnail, while still dragging. We don't want to perform drag then
+            if Windows.focusedWindowIndex == Windows.hoveredWindowIndex {
+                self.mouseUpCallback()
+            }
         })
         dragAndDropTimer?.tolerance = 0.2
-        return .link
     }
 
     override func draggingExited(_ sender: NSDraggingInfo?) {
@@ -71,9 +84,16 @@ class ThumbnailView: FlippedView {
         return open != nil
     }
 
+    override func mouseDown(with event: NSEvent) {
+        receivedMouseDown = true
+    }
+
     override func mouseUp(with event: NSEvent) {
-        if event.clickCount >= 1 {
-            mouseUpCallback()
+        if receivedMouseDown {
+            if bounds.contains(convert(event.locationInWindow, from: nil)) {
+                mouseUpCallback()
+            }
+            receivedMouseDown = false
         }
     }
 
@@ -123,7 +143,7 @@ class ThumbnailView: FlippedView {
 
     func showOrHideWindowControls(_ shouldShowWindowControls: Bool) {
         let shouldShow = shouldShowWindowControls && !Preferences.hideColoredCircles && !Appearance.hideThumbnails
-        if Preferences.appearanceStyle == .thumbnails, isShowingWindowControls != shouldShow {
+        if Preferences.appearanceStyle == .thumbnails {
             isShowingWindowControls = shouldShow
             for icon in windowControlIcons {
                 icon.isHidden = !shouldShow

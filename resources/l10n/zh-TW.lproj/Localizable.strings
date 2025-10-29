@@ -35,6 +35,7 @@
 "App is hidden" = "應用程式已隱藏";
 "App is running but has no open window" = "程式在運行但沒有打開的視窗";
 "Apparition delay" = "顯示前的延遲";
+"Apparition delay of Switcher" = "顯示前的延遲";
 "Apparition delay:" = "顯示前的延遲：";
 "Appearance" = "外觀";
 "Application Name" = "應用程式名稱";
@@ -48,7 +49,7 @@
 "Cancel" = "取消";
 "Cancel and hide" = "取消並隱藏";
 "Center" = "置中";
-"Check for updates now…" = "立即檢查更新⋯";
+"Check for updates now…" = "正在檢查更新⋯";
 "Check for updates periodically" = "定期自動檢查更新";
 "Check for updates…" = "檢查更新⋯";
 "Check permissions…" = "檢查權限⋯";
@@ -69,7 +70,9 @@
 "Don’t show windows from these apps" = "不要顯示這些程式的視窗";
 "Done" = "完成";
 "End" = "尾端";
+"Fade in animation of Preview" = "開啟時使用淡入動畫";
 "Fade out animation" = "淡出動畫";
+"Fade out animation of Switcher" = "離開時使用淡出動畫";
 "Fade out animation:" = "淡出動畫：";
 "Focus selected window" = "聚焦選擇的視窗";
 "Fullscreen window" = "全螢幕視窗";
@@ -122,6 +125,7 @@
 "Mouse hover" = "滑鼠懸停";
 "Multiple screens" = "多個顯示器";
 "Never send crash reports" = "永不送出當機報告";
+"Non-active apps" = "非活躍應用程式";
 "Normal" = "一般";
 "Not allowed" = "不允許";
 "NSHumanReadableCopyright" = "GPL-3.0 授權";
@@ -175,6 +179,7 @@
 "Show" = "顯示";
 "Show & Hide" = "顯示隱藏";
 "Show an item in the switcher for each window, or for each application. Windows will be focused, whereas applications will be activated." = "設定在切換器中顯示每一個視窗或者是顯示每一個應用程式。選擇視窗時會聚焦該視窗，而選擇應用程式會啟動該程式。";
+"Show apps with no open window" = "顯示沒有開啟視窗的應用程式";
 "Show at the end" = "在最後顯示";
 "Show fullscreen windows" = "顯示全螢幕視窗";
 "Show hidden windows" = "顯示隱藏的視窗";
@@ -211,6 +216,7 @@
 "Then release:" = "然後放開：";
 "This permission is needed to focus windows after you release the shortcut" = "需要取得此權限，才能在放開快速鍵後聚焦視窗";
 "This permission is needed to show screenshots and titles of open windows" = "需要取得此權限，才能顯示已開啟視窗的截圖與標題資訊";
+"This permission is needed to show thumbnails and preview of open windows" = "需要此權限才能顯示縮圖和開啟視窗的預覽";
 "Thumbnails" = "縮圖";
 "Title" = "標題";
 "Title truncation" = "標題截斷";

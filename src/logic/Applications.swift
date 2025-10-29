@@ -13,6 +13,12 @@ class Applications {
         addRunningApplications(NSWorkspace.shared.runningApplications)
     }
 
+    static func manuallyRefreshAllWindows() {
+        for app in list {
+            app.manuallyUpdateWindows()
+        }
+    }
+
     static func addRunningApplications(_ runningApps: [NSRunningApplication]) {
         runningApps.forEach {
             let bundleIdentifier = $0.bundleIdentifier
@@ -20,7 +26,8 @@ class Applications {
             if bundleIdentifier == "com.apple.dock" {
                 DockEvents.observe(processIdentifier)
             }
-            if isActualApplication(processIdentifier, bundleIdentifier) {
+            // com.apple.universalcontrol always fails subscribeToNotification. We blacklist it to save resources on everyone's machines
+            if bundleIdentifier != "com.apple.universalcontrol" && isActualApplication(processIdentifier, bundleIdentifier) {
                 Applications.list.append(Application($0))
             }
         }
@@ -56,7 +63,7 @@ class Applications {
 
     static func refreshBadgesAsync() {
         if !App.app.appIsBeingUsed || Preferences.hideAppBadges { return }
-        AXUIElement.retryAxCallUntilTimeout {
+        AXUIElement.retryAxCallUntilTimeout(callType: .updateDockBadges) {
             if let dockPid = (list.first { $0.bundleIdentifier == "com.apple.dock" }?.pid),
                let axList = (try AXUIElementCreateApplication(dockPid).children()?.first { try $0.role() == kAXListRole }),
                let axAppDockItem = (try axList.children()?.filter { try $0.subrole() == kAXApplicationDockItemSubrole && ($0.appIsRunning() ?? false) }) {

@@ -29,7 +29,7 @@ private func observe_() {
         userInfo: nil)
     if let eventTap {
         let runLoopSource = CFMachPortCreateRunLoopSource(nil, eventTap, 0)
-        CFRunLoopAddSource(BackgroundWork.keyboardEventsThread.runLoop, runLoopSource, .commonModes)
+        CFRunLoopAddSource(BackgroundWork.keyboardAndTrackpadEventsThread.runLoop, runLoopSource, .commonModes)
     } else {
         App.app.restart()
     }
@@ -86,7 +86,7 @@ class GestureDetector {
 
     static func checkForFingersUp(_ touches: Set<NSTouch>, _ requiredFingers: Int) -> Bool {
         if App.app.appIsBeingUsed && touches.count < requiredFingers && App.app.shortcutIndex == Preferences.gestureIndex
-               && Preferences.shortcutStyle[App.app.shortcutIndex] == .focusOnRelease {
+               && !App.app.forceDoNothingOnRelease && Preferences.shortcutStyle[App.app.shortcutIndex] == .focusOnRelease {
             DispatchQueue.main.async { App.app.focusTarget() }
             return true
         }
@@ -140,7 +140,7 @@ class TriggerSwipeDetector {
             let horizontal = Preferences.nextWindowGesture.isHorizontal()
             if (updateSwipeStillPossible(horizontal ? absY : absX) && (horizontal ? absX : absY) >= MIN_SWIPE_DISTANCE) {
                 reset()
-                DispatchQueue.main.async { App.app.showUiOrCycleSelection(Preferences.gestureIndex) }
+                DispatchQueue.main.async { App.app.showUiOrCycleSelection(Preferences.gestureIndex, false) }
                 return true
             }
             return false

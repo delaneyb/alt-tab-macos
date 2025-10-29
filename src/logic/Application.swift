@@ -19,6 +19,16 @@ class Application: NSObject {
     var dockLabel: String?
     var focusedWindow: Window? = nil
     var alreadyRequestedToQuit = false
+    var debugId: String { "(pid:\(String(describing: pid)) \(bundleIdentifier ?? bundleURL?.absoluteString ?? executableURL?.absoluteString ?? localizedName ?? "nil"))" }
+
+    static let notifications = [
+        kAXApplicationActivatedNotification,
+        kAXMainWindowChangedNotification,
+        kAXFocusedWindowChangedNotification,
+        kAXWindowCreatedNotification,
+        kAXApplicationHiddenNotification,
+        kAXApplicationShownNotification,
+    ]
 
     init(_ runningApplication: NSRunningApplication) {
         self.runningApplication = runningApplication
@@ -31,6 +41,7 @@ class Application: NSObject {
         bundleURL = runningApplication.bundleURL
         executableURL = runningApplication.executableURL
         super.init()
+        Logger.debug(debugId)
         observeEventsIfEligible()
         kvObservers = [
             runningApplication.observe(\.isFinishedLaunching, options: [.new]) { [weak self] _, _ in
@@ -48,7 +59,7 @@ class Application: NSObject {
     }
 
     deinit {
-        Logger.debug("Deinit app", bundleIdentifier ?? bundleURL ?? "nil")
+        Logger.debug("Deinit app", debugId)
     }
 
     func removeWindowslessAppWindow() {
@@ -59,22 +70,25 @@ class Application: NSObject {
     }
 
     func observeEventsIfEligible() {
-        if runningApplication.activationPolicy != .prohibited && axUiElement == nil {
-            axUiElement = AXUIElementCreateApplication(pid)
-            AXObserverCreate(pid, axObserverCallback, &axObserver)
-            Logger.debug("Adding app", pid, bundleIdentifier ?? "nil")
+        if runningApplication.activationPolicy != .prohibited && !isReallyFinishedLaunching {
+            if axUiElement == nil {
+                axUiElement = AXUIElementCreateApplication(pid)
+            }
+            if axObserver == nil {
+                AXObserverCreate(pid, axObserverCallback, &axObserver)
+            }
             observeEvents()
         }
     }
 
     func manuallyUpdateWindows() {
-        AXUIElement.retryAxCallUntilTimeout(timeoutInSeconds: 5) { [weak self] in
+        AXUIElement.retryAxCallUntilTimeout(context: debugId, pid: pid, callType: .updateAppWindows) { [weak self] in
             guard let self else { return }
             var atLeastOneActualWindow = false
-            let axWindows = try self.axUiElement!.allWindows(self.pid)
+            guard let axWindows = try self.axUiElement?.allWindows(self.pid) else { return }
             for axWindow in axWindows {
-                if let wid = try axWindow.cgWindowId(),
-                    let (title, role, subrole, isMinimized, isFullscreen) = try axWindow.windowAttributes() {
+                let wid = try axWindow.cgWindowId()
+                if let (title, role, subrole, isMinimized, isFullscreen) = try axWindow.windowAttributes() {
                     let size = try axWindow.size()
                     let level = wid.level()
                     if AXUIElement.isActualWindow(self, wid, level, title, subrole, role, size) {
@@ -116,10 +130,8 @@ class Application: NSObject {
     }
 
     func addWindowlessWindowIfNeeded() -> Window? {
-        if !Preferences.hideWindowlessApps &&
-               runningApplication.activationPolicy == .regular &&
-               !runningApplication.isTerminated &&
-               (Windows.list.firstIndex { $0.application.pid == pid }) == nil {
+        if runningApplication.activationPolicy == .regular && !runningApplication.isTerminated
+               && (Windows.list.firstIndex { $0.application.pid == pid }) == nil {
             let window = Window(self)
             Windows.appendAndUpdateFocus(window)
             return window
@@ -164,28 +176,25 @@ class Application: NSObject {
 
     private func observeEvents() {
         guard let axObserver else { return }
-        for notification in [
-            kAXApplicationActivatedNotification,
-            kAXMainWindowChangedNotification,
-            kAXFocusedWindowChangedNotification,
-            kAXWindowCreatedNotification,
-            kAXApplicationHiddenNotification,
-            kAXApplicationShownNotification,
-        ] {
-            AXUIElement.retryAxCallUntilTimeout { [weak self] in
-                guard let self else { return }
-                try self.axUiElement!.subscribeToNotification(axObserver, notification, {
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self else { return }
-                        // some apps have `isFinishedLaunching == true` but are actually not finished, and will return .cannotComplete
-                        // we consider them ready when the first subscription succeeds
-                        // windows opened before that point won't send a notification, so check those windows manually here
-                        if !self.isReallyFinishedLaunching {
-                            self.isReallyFinishedLaunching = true
-                            self.manuallyUpdateWindows()
-                        }
+        AXUIElement.retryAxCallUntilTimeout(context: debugId, pid: pid, callType: .subscribeToAppNotification) { [weak self] in
+            guard let self else { return }
+            if try self.axUiElement!.subscribeToNotification(axObserver, Application.notifications.first!) {
+                Logger.debug("Subscribed to app", self.debugId)
+                for notification in Application.notifications.dropFirst() {
+                    AXUIElement.retryAxCallUntilTimeout(context: self.debugId, pid: self.pid, callType: .subscribeToAppNotification) { [weak self] in
+                        try self?.axUiElement!.subscribeToNotification(axObserver, notification)
                     }
-                })
+                }
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    // some apps have `isFinishedLaunching == true` but are actually not finished, and will return .cannotComplete
+                    // we consider them ready when the first subscription succeeds
+                    // windows opened before that point won't send a notification, so check those windows manually here
+                    if !self.isReallyFinishedLaunching {
+                        self.isReallyFinishedLaunching = true
+                        self.manuallyUpdateWindows()
+                    }
+                }
             }
         }
         CFRunLoopAddSource(BackgroundWork.accessibilityEventsThread.runLoop, AXObserverGetRunLoopSource(axObserver), .commonModes)
