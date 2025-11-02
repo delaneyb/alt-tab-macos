@@ -3,6 +3,35 @@ import ApplicationServices
 
 class Applications {
     static var list = [Application]()
+    
+    // System processes that should not be tracked by AltTab
+    private static let systemProcessBlacklist: Set<String> = [
+        "com.apple.universalcontrol",
+        "com.apple.notificationcenterui",
+        "com.apple.controlcenter",
+        "com.apple.systemuiserver",
+        "com.apple.loginwindow",
+        "com.apple.Spotlight",
+        "com.apple.wallpaper",
+        "com.apple.wifi.WiFiAgent",
+        "com.apple.AirPlayUIAgent",
+        "com.apple.TextInputMenuAgent",
+        "com.apple.coreservices.uiagent",
+        "com.apple.UserNotificationCenter",
+        "com.apple.CoreLocationAgent",
+        "com.apple.talagent",
+        "com.apple.backgroundtaskmanagementagent",
+        "com.apple.Dictation",
+        "com.apple.KeychainCircle.notificationcenter",
+        "com.apple.AppSSOUIService",
+        "com.apple.accessibility.AccessibilityUIServer",
+        "com.apple.accessibility.AXVisualSupportAgent",
+        "com.objective-see.lulu.extension",
+        "com.github.Hammerspoon",
+        "org.pqrs.Karabiner-NotificationWindow",
+        "com.todesktop.230313mzl4w4u92.helper", // Cursor IDE 'helper'
+        "com.todesktop.230313mzl4w4u92.helper.Plugin", // Cursor IDE 'helper.Plugin'
+    ]
 
     static func initialDiscovery() {
         addInitialRunningApplications()
@@ -26,8 +55,8 @@ class Applications {
             if bundleIdentifier == "com.apple.dock" {
                 DockEvents.observe(processIdentifier)
             }
-            // com.apple.universalcontrol always fails subscribeToNotification. We blacklist it to save resources on everyone's machines
-            if bundleIdentifier != "com.apple.universalcontrol" && isActualApplication(processIdentifier, bundleIdentifier) {
+            // Skip system processes, helper apps, and Electron helper processes that shouldn't be tracked
+            if !systemProcessBlacklist.contains(bundleIdentifier ?? "") && !isElectronHelper($0) && isActualApplication(processIdentifier, bundleIdentifier) {
                 Applications.list.append(Application($0))
             }
         }
@@ -110,6 +139,15 @@ class Applications {
 
     private static func isPasswords(_ bundleIdentifier: String?) -> Bool {
         return bundleIdentifier == "com.apple.Passwords"
+    }
+
+    private static func isElectronHelper(_ runningApp: NSRunningApplication) -> Bool {
+        // Electron helpers are in Frameworks directories and have "Helper" in name/path
+        let path = runningApp.executableURL?.path ?? runningApp.bundleURL?.path ?? ""
+        let name = runningApp.localizedName ?? ""
+        let hasHelper = path.localizedCaseInsensitiveContains("Helper") || name.localizedCaseInsensitiveContains("Helper")
+        // Helper processes are in Frameworks; main Electron app is in MacOS
+        return hasHelper && path.contains("/Frameworks/")
     }
 
     static func isAndroidEmulator(_ bundleIdentifier: String?, _ processIdentifier: pid_t) -> Bool {
