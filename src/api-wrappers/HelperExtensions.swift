@@ -332,3 +332,50 @@ extension NSRunningApplication {
 // 250ms is similar to human delay in processing changes on screen
 // See https://humanbenchmark.com/tests/reactiontime
 let humanPerceptionDelay = DispatchTimeInterval.milliseconds(250)
+
+extension TimeInterval {
+    /// Returns a compact, human-readable string representation of this duration.
+    /// Formats as:
+    /// - "+  1ms" to "+ 999ms" for durations < 1 second
+    /// - "+  1.1s" to "+999.9s" for durations 1s to 999.9s
+    /// - "+  6.2h" to "+123.5h" for durations >= 1000s
+    /// - Spaces only for durations < 0.5ms
+    ///
+    /// The "+" prefix indicates a positive duration (time delta), and the format uses
+    /// a single unit (ms, s, or h) for compact display suitable for logging or debug output.
+    ///
+    /// Note: While Foundation provides `DateComponentsFormatter` and `Duration.TimeFormatStyle`,
+    /// they are designed for UI/UX display (e.g., "1h 2m 3s" or "1:00:00") and cannot produce
+    /// this compact, single-unit format with "+" prefix and specific padding.
+    ///
+    /// - Parameter padding: Optional width in characters to pad the result to. Defaults to 7.
+    ///   If the formatted string is shorter than `padding`, it will be right-padded with spaces.
+    ///   If longer, it will be returned as-is (no truncation).
+    /// - Returns: A formatted string representing the duration, padded to the specified width
+    func formatted(padding: Int = 7) -> String {
+        let deltaMs = self * 1000
+        let formatted: String
+
+        if deltaMs < 0.5 {
+            formatted = ""
+        } else if deltaMs < 1000 {
+            // < 1 second: show milliseconds as integer (e.g., "+   1ms", "+ 999ms")
+            let ms = Int(deltaMs.rounded())
+            formatted = String(format: "+%4dms", ms)
+        } else if deltaMs < 1_000_000 {
+            // 1s to 999.9s: show seconds with 1 decimal (e.g., "+  1.1s", "+ 12.4s", "+123.5s")
+            let seconds = deltaMs / 1000
+            formatted = String(format: "+%5.1fs", seconds)
+        } else {
+            // >= 1000s: show hours with 1 decimal (e.g., "+  6.2h", "+ 12.4h", "+123.5h")
+            let hours = deltaMs / 3_600_000
+            formatted = String(format: "+%5.1fh", hours)
+        }
+
+        // Pad to the requested width (right-pad with spaces)
+        if formatted.count < padding {
+            return formatted + String(repeating: " ", count: padding - formatted.count)
+        }
+        return formatted
+    }
+}

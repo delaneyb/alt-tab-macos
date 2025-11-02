@@ -25,6 +25,6 @@ if [ $BUILD_EXIT_CODE -eq 0 ]; then
   APP_PATH=$(ls -td ~/Library/Developer/Xcode/DerivedData/alt-tab-macos-*/Build/Products/Debug/AltTab.app/Contents/MacOS/AltTab 2>/dev/null | head -1)
   
   if [ -n "$APP_PATH" ]; then
-    "$APP_PATH" --logs=debug &
+    "$APP_PATH" --logs=debug --disable-modules=SystemPermissions &
   fi
 fi
