@@ -23,3 +23,5 @@ codesign.p12
 
 # Personal scratch files
 /TODOs.md
+# IDE-only file: Package.swift is used by VS Code Swift extension for IDE features
+Package.swift

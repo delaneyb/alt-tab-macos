@@ -1,0 +1,72 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Watch & Auto-Reload (watchexec)",
+			"type": "shell",
+			"command": "${workspaceFolder}/.vscode/watch-and-build.sh",
+			"isBackground": true,
+			"options": {
+				"shell": {
+					"executable": "/bin/zsh",
+					"args": ["-l"]
+				}
+			},
+			"runOptions": {
+				"runOn": "folderOpen"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true
+			},
+			"problemMatcher": [
+				{
+					"pattern": {
+						"regexp": "^❌\\s+error:\\s+(.+?):(\\d+):(\\d+):\\s+(.*)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"message": 4
+					},
+					"severity": "error",
+					"fileLocation": [
+						"absolute"
+					],
+					"background": {
+						"beginsPattern": "^\\[Running:",
+						"endsPattern": "^\\[Command (was successful|exited with)"
+					}
+				},
+				{
+					"pattern": {
+						"regexp": "^⚠️\\s+(.+?):(\\d+):(\\d+):\\s+(.*)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"message": 4
+					},
+					"severity": "warning",
+					"fileLocation": [
+						"absolute"
+					],
+					"background": {
+						"beginsPattern": "^\\[Running:",
+						"endsPattern": "^\\[Command (was successful|exited with)"
+					}
+				}
+			]
+		},
+		{
+			"label": "Build Release & Install to /Applications",
+			"type": "shell",
+			"command": "set -o pipefail && xcodebuild -workspace alt-tab-macos.xcworkspace -scheme Release -configuration Release ARCHS=arm64 ONLY_ACTIVE_ARCH=NO build 2>&1 | scripts/xcbeautify && rsync -a --delete \"$(ls -td ~/Library/Developer/Xcode/DerivedData/alt-tab-macos-*/Build/Products/Release/AltTab.app 2>/dev/null | head -1)\" /Applications/ && echo '✅ AltTab.app installed to /Applications'",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true
+			},
+			"problemMatcher": []
+		}
+	]
+}

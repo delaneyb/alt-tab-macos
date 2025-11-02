@@ -1,0 +1,13 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "lldb",
+			"request": "attach",
+			"name": "Attach to AltTab",
+			"program": "${env:HOME}/Library/Developer/Xcode/DerivedData/alt-tab-macos-cyvxnrynlsekdxeejhoujhpxguvo/Build/Products/Debug/AltTab.app/Contents/MacOS/AltTab",
+			"waitFor": true,
+			"internalConsoleOptions": "openOnSessionStart"
+		}
+	]
+}
