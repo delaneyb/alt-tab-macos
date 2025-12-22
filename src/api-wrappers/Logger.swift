@@ -1,5 +1,6 @@
 import SwiftyBeaver
 import Foundation
+import Darwin
 
 class Logger {
     private static let logger = SwiftyBeaver.self
@@ -22,10 +23,15 @@ class Logger {
     private static var disabledModules: Set<String> = []
 
     // Performance timing utilities (like console.time/timeEnd in JavaScript)
+    // These are accessed from multiple background queues; protect with a lock to avoid Dictionary races/crashes.
+    private static let timersLock = NSLock()
     private static var timers = [String: CFAbsoluteTime]()
     private static var expectedMaxDurations = [String: Double]()
 
     static func initialize() {
+        // Keep logs flushing when stdout is piped (e.g., VS Code tasks -> tee).
+        setvbuf(stdout, nil, _IOLBF, 0)
+
         // Parse command line arguments for module filtering
         parseModuleFilters()
 
@@ -140,25 +146,20 @@ class Logger {
     /// which adds disabled module filtering and delta timing before calling SwiftyBeaver's own
     /// `custom` method (via `logger.custom()`) to handle the actual output.
     private static func custom(_ level: SwiftyBeaver.Level, _ items: [Any?], file: String = #file, function: String = #function, line: Int = #line, context: Any? = nil) {
-        // Module filtering - optimized with early returns
-        let moduleName = URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent
+        if let consoleLevel = consoleDestination?.minLevel,
+            level.rawValue < consoleLevel.rawValue
+        {
+            return
+        }
 
-        // Check disabled modules (blacklist)
         if !disabledModules.isEmpty {
-            for pattern in disabledModules {
-                if moduleName.contains(pattern) {
-                    return  // Skip this log
-                }
+            let moduleName = URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent
+            for pattern in disabledModules where moduleName.contains(pattern) {
+                return
             }
         }
 
         let message = items.map { "\($0 ?? "nil")" }.joined(separator: " ")
-
-        let shouldLog: Bool = {
-            guard let consoleLevel = consoleDestination?.minLevel else { return true }
-            return level.rawValue >= consoleLevel.rawValue
-        }()
-
         // Message inherits color from SwiftyBeaver's $C wrapper (entire line same color)
         let coloredMessage = "[\(threadName())] \(message)"
 
@@ -173,15 +174,13 @@ class Logger {
         var deltaPrefix = String(repeating: " ", count: 7)  // 7-char delta: "+  1ms", "+ 1.1s", "+123.5s", "+  6.2h"
         var blankLinesToEmit = 0
 
-        if shouldLog {
-            let now = CFAbsoluteTimeGetCurrent()
-            if let previous = lastLoggedTime {
-                let deltaSeconds = now - previous
-                deltaPrefix = deltaSeconds.formatted(padding: 7)
-                blankLinesToEmit = blankLineCount(forDeltaSeconds: deltaSeconds)
-            }
-            lastLoggedTime = now
+        let now = CFAbsoluteTimeGetCurrent()
+        if let previous = lastLoggedTime {
+            let deltaSeconds = now - previous
+            deltaPrefix = deltaSeconds.formatted(padding: 7)
+            blankLinesToEmit = blankLineCount(forDeltaSeconds: deltaSeconds)
         }
+        lastLoggedTime = now
 
         if blankLinesToEmit > 0 {
             emitBlankLines(blankLinesToEmit)
@@ -224,10 +223,10 @@ class Logger {
         _ label: String, expectedMaxMs: Double? = nil, _ message: String = "",
         logStart: Bool = true, file: String = #file, function: String = #function, line: Int = #line
     ) {
+        timersLock.lock()
         timers[label] = CFAbsoluteTimeGetCurrent()
-        if let max = expectedMaxMs {
-            expectedMaxDurations[label] = max
-        }
+        if let max = expectedMaxMs { expectedMaxDurations[label] = max }
+        timersLock.unlock()
         if logStart {
             if message.isEmpty {
                 info("⏱️", label, "START", file: file, function: function, line: line)
@@ -242,7 +241,16 @@ class Logger {
         _ label: String, _ context: String = "", file: String = #file, function: String = #function,
         line: Int = #line
     ) {
-        guard let startTime = timers[label] else {
+        timersLock.lock()
+        let startTime = timers[label]
+        let expectedMax = expectedMaxDurations[label]
+        if startTime != nil {
+            timers.removeValue(forKey: label)
+            expectedMaxDurations.removeValue(forKey: label)
+        }
+        timersLock.unlock()
+
+        guard let startTime else {
             warning(
                 "⏱️", label, "END called but no start time found", file: file, function: function,
                 line: line)
@@ -251,7 +259,6 @@ class Logger {
         let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
         let elapsedStr = String(format: "%.0fms", elapsed)
 
-        let expectedMax = expectedMaxDurations[label]
         let didExceed = expectedMax.map { elapsed > $0 } ?? false
 
         if didExceed, let max = expectedMax {
@@ -266,8 +273,6 @@ class Logger {
             info("⏱️", label, "END", elapsedStr, context, file: file, function: function, line: line)
         }
 
-        timers.removeValue(forKey: label)
-        expectedMaxDurations.removeValue(forKey: label)
     }
 
     /// Mark an intermediate checkpoint. Automatically warns if elapsed time exceeded expectedMaxMs set in time().
@@ -275,7 +280,12 @@ class Logger {
         _ label: String, _ message: String, file: String = #file, function: String = #function,
         line: Int = #line
     ) {
-        guard let startTime = timers[label] else {
+        timersLock.lock()
+        let startTime = timers[label]
+        let expectedMax = expectedMaxDurations[label]
+        timersLock.unlock()
+
+        guard let startTime else {
             warning(
                 "⏱️", label, "mark:", message, "- no start time found", file: file,
                 function: function, line: line)
@@ -284,7 +294,6 @@ class Logger {
         let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
         let elapsedStr = String(format: "%.0fms", elapsed)
 
-        let expectedMax = expectedMaxDurations[label]
         let didExceed = expectedMax.map { elapsed > $0 } ?? false
 
         if didExceed, let max = expectedMax {
