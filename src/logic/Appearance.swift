@@ -91,12 +91,21 @@ class Appearance {
         // They totally bombed the preferences and configurability of this in one of the 2024
         // updates taking away all of the sliders where you used to be able to set these settings
         // directly and instead replacing them with a small medium large setting
-        rowsCount = isHorizontalScreen ? 4 : 5
+        let defaultRows = isHorizontalScreen ? 4 : 5
+        let preferredRows = max(1, min(Preferences.thumbnailsRowsCount, 8))
+        rowsCount = CGFloat(preferredRows)
         iconSize = 22
         fontHeight = 14
         maxWidthOnScreen = 0.6
         windowMinWidthInRow = 0.15
         windowMaxWidthInRow = 0.30
+        // Keep row height stable; adjust total panel height via rowsCount.
+        let baseMaxHeightOnScreen = CGFloat(0.8)
+        let baseMaxThumbnailsHeight = NSScreen.preferred.frame.height * baseMaxHeightOnScreen - windowPadding * 2
+        let baseRowHeight = ((baseMaxThumbnailsHeight - interCellPadding) / CGFloat(defaultRows) - interCellPadding).rounded()
+        let targetMaxThumbnailsHeight = (baseRowHeight + interCellPadding) * rowsCount + interCellPadding
+        let targetMaxHeightOnScreen = (targetMaxThumbnailsHeight + windowPadding * 2) / NSScreen.preferred.frame.height
+        maxHeightOnScreen = min(targetMaxHeightOnScreen, 0.95)
         if currentVisibility == .highest {
             edgeInsetsSize = 10
             cellCornerRadius = 12

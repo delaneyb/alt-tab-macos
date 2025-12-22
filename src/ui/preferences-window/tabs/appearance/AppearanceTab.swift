@@ -395,6 +395,9 @@ class AppearanceTab: NSObject {
         }, buttonSpacing: 10)], secondaryViewsAlignment: .centerX)
         table.addRow(leftText: NSLocalizedString("Size", comment: ""),
             rightViews: [LabelAndControl.makeSegmentedControl("appearanceSize", AppearanceSizePreference.allCases, segmentWidth: 100)])
+        let rowsSliderViews = LabelAndControl.makeLabelWithSlider(NSLocalizedString("Thumbnail rows", comment: ""),
+            "thumbnailsRowsCount", 1, 8, 8, true, NSLocalizedString("rows", comment: ""), width: 180)
+        table.addRow(leftViews: [rowsSliderViews[0]], rightViews: Array(rowsSliderViews.dropFirst()))
         table.addRow(leftText: NSLocalizedString("Theme", comment: ""),
             rightViews: [LabelAndControl.makeSegmentedControl("appearanceTheme", AppearanceThemePreference.allCases, segmentWidth: 100)])
         table.addRow(leftText: NSLocalizedString("Visibility", comment: ""),

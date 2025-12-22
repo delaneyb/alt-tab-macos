@@ -313,7 +313,7 @@ class LabelAndControl: NSObject {
         }
         // some preferences require re-creating some components
         if (!(senderControl is NSSlider) || (NSEvent.pressedMouseButtons & (1 << 0)) == 0) &&
-               (["appearanceStyle", "appearanceSize", "appearanceTheme", "appearanceVisibility", "showOnScreen", "showAppsOrWindows"].contains { (pref: String) -> Bool in
+               (["appearanceStyle", "appearanceSize", "appearanceTheme", "appearanceVisibility", "showOnScreen", "showAppsOrWindows", "thumbnailsRowsCount"].contains { (pref: String) -> Bool in
                    pref == senderControl.identifier!.rawValue
                }) {
             (App.shared as! App).resetPreferencesDependentComponents()

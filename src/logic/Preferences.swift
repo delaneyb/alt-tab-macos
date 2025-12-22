@@ -51,6 +51,7 @@ class Preferences {
         "appearanceSize": AppearanceSizePreference.medium.indexAsString,
         "appearanceTheme": AppearanceThemePreference.system.indexAsString,
         "appearanceVisibility": AppearanceVisibilityPreference.normal.indexAsString,
+        "thumbnailsRowsCount": "4",
         "theme": ThemePreference.macOs.indexAsString,
         "showOnScreen": ShowOnScreenPreference.active.indexAsString,
         "titleTruncation": TitleTruncationPreference.end.indexAsString,
@@ -118,6 +119,7 @@ class Preferences {
     static var previewFadeInAnimation: Bool { CachedUserDefaults.bool("previewFadeInAnimation") }
     static var hideSpaceNumberLabels: Bool { CachedUserDefaults.bool("hideSpaceNumberLabels") }
     static var hideStatusIcons: Bool { CachedUserDefaults.bool("hideStatusIcons") }
+    static var thumbnailsRowsCount: Int { CachedUserDefaults.int("thumbnailsRowsCount") }
     static var hideAppBadges: Bool { CachedUserDefaults.bool("hideAppBadges") }
     // periphery:ignore
     static var startAtLogin: Bool { CachedUserDefaults.bool("startAtLogin") }
