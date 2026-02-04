@@ -121,23 +121,101 @@ class Logger {
         _ items: Any?..., file: String = #file, function: String = #function, line: Int = #line,
         context: Any? = nil
     ) {
-        custom(.verbose, items, file: file, function: function, line: line, context: context)
+        custom(level: .verbose, file: file, function: function, line: line, context: context) {
+            formatItems(items)
+        }
     }
 
-    static func debug(_ items: Any?..., file: String = #file, function: String = #function, line: Int = #line, context: Any? = nil) {
-        custom(.debug, items, file: file, function: function, line: line, context: context)
+    static func verbose(
+        _ message: @escaping () -> Any?, file: String = #file, function: String = #function,
+        line: Int = #line, context: Any? = nil
+    ) {
+        custom(level: .verbose, file: file, function: function, line: line, context: context) {
+            formatValue(message())
+        }
     }
 
-    static func info(_ items: Any?..., file: String = #file, function: String = #function, line: Int = #line, context: Any? = nil) {
-        custom(.info, items, file: file, function: function, line: line, context: context)
+    static func debug(
+        _ items: Any?..., file: String = #file, function: String = #function, line: Int = #line,
+        context: Any? = nil
+    ) {
+        custom(level: .debug, file: file, function: function, line: line, context: context) {
+            formatItems(items)
+        }
     }
 
-    static func warning(_ items: Any?..., file: String = #file, function: String = #function, line: Int = #line, context: Any? = nil) {
-        custom(.warning, items, file: file, function: function, line: line, context: context)
+    static func debug(
+        _ message: @escaping () -> Any?, file: String = #file, function: String = #function,
+        line: Int = #line, context: Any? = nil
+    ) {
+        custom(level: .debug, file: file, function: function, line: line, context: context) {
+            formatValue(message())
+        }
     }
 
-    static func error(_ items: Any?..., file: String = #file, function: String = #function, line: Int = #line, context: Any? = nil) {
-        custom(.error, items, file: file, function: function, line: line, context: context)
+    static func info(
+        _ items: Any?..., file: String = #file, function: String = #function, line: Int = #line,
+        context: Any? = nil
+    ) {
+        custom(level: .info, file: file, function: function, line: line, context: context) {
+            formatItems(items)
+        }
+    }
+
+    static func info(
+        _ message: @escaping () -> Any?, file: String = #file, function: String = #function,
+        line: Int = #line, context: Any? = nil
+    ) {
+        custom(level: .info, file: file, function: function, line: line, context: context) {
+            formatValue(message())
+        }
+    }
+
+    static func warning(
+        _ items: Any?..., file: String = #file, function: String = #function, line: Int = #line,
+        context: Any? = nil
+    ) {
+        custom(level: .warning, file: file, function: function, line: line, context: context) {
+            formatItems(items)
+        }
+    }
+
+    static func warning(
+        _ message: @escaping () -> Any?, file: String = #file, function: String = #function,
+        line: Int = #line, context: Any? = nil
+    ) {
+        custom(level: .warning, file: file, function: function, line: line, context: context) {
+            formatValue(message())
+        }
+    }
+
+    static func error(
+        _ items: Any?..., file: String = #file, function: String = #function, line: Int = #line,
+        context: Any? = nil
+    ) {
+        custom(level: .error, file: file, function: function, line: line, context: context) {
+            formatItems(items)
+        }
+    }
+
+    static func error(
+        _ message: @escaping () -> Any?, file: String = #file, function: String = #function,
+        line: Int = #line, context: Any? = nil
+    ) {
+        custom(level: .error, file: file, function: function, line: line, context: context) {
+            formatValue(message())
+        }
+    }
+
+    private static func formatValue(_ value: Any?) -> String {
+        if let value {
+            return String(describing: value)
+        }
+        return "nil"
+    }
+
+    private static func formatItems(_ items: [Any?]) -> String {
+        items.map { formatValue($0) }.joined(separator: " ")
     }
 
     /// Wrapper around SwiftyBeaver's `custom` logging method.
@@ -145,7 +223,10 @@ class Logger {
     /// All public logging methods (debug, info, warning, error) delegate to this function,
     /// which adds disabled module filtering and delta timing before calling SwiftyBeaver's own
     /// `custom` method (via `logger.custom()`) to handle the actual output.
-    private static func custom(_ level: SwiftyBeaver.Level, _ items: [Any?], file: String = #file, function: String = #function, line: Int = #line, context: Any? = nil) {
+    private static func custom(
+        level: SwiftyBeaver.Level, file: String = #file, function: String = #function, line: Int = #line,
+        context: Any? = nil, _ message: @escaping () -> String
+    ) {
         if let consoleLevel = consoleDestination?.minLevel,
             level.rawValue < consoleLevel.rawValue
         {
@@ -159,7 +240,7 @@ class Logger {
             }
         }
 
-        let message = items.map { "\($0 ?? "nil")" }.joined(separator: " ")
+        let message = message()
         // Message inherits color from SwiftyBeaver's $C wrapper (entire line same color)
         let coloredMessage = "[\(threadName())] \(message)"
 
@@ -326,6 +407,7 @@ class Logger {
             Swift.print("")
         }
     }
+
 
     private static func threadName() -> String {
         if Thread.isMainThread {
